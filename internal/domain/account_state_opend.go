@@ -81,7 +81,7 @@ func (ag OpenedAccount) ApplyEvent(event eventstore.Event) eventstore.Aggregate 
 		ag.balance = ag.balance - ev.amount
 		return ag
 	case AccountClosedEvent:
-		return NewClosedAccount(ev.accountID, ev.SeqNr(), ag.snapshotVersion)
+		return NewClosedAccount(ev.AggregateID().(AccountID), ev.SeqNr(), ag.snapshotVersion)
 	default:
 		panic("unknown event")
 	}
