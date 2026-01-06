@@ -9,6 +9,13 @@ type (
 	}
 )
 
+func NewRepository(es EventStore, createBlank func() Aggregate) Repository {
+	return Repository{
+		es:          es,
+		createBlank: createBlank,
+	}
+}
+
 func (repo Repository) FindBy(ctx context.Context, aggregateID AggregateID) (*Aggregate, error) {
 	if repo.es == nil {
 		panic("no event store found")
