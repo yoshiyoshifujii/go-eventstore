@@ -14,10 +14,10 @@ type (
 	}
 )
 
-func NewClosedAccount(id AccountID, snapshotVersion uint64) ClosedAccount {
+func NewClosedAccount(id AccountID, seqNr, snapshotVersion uint64) ClosedAccount {
 	return ClosedAccount{
 		id:              id,
-		seqNr:           0,
+		seqNr:           seqNr,
 		snapshotVersion: snapshotVersion,
 	}
 }
