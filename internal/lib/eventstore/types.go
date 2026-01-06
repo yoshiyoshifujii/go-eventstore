@@ -22,6 +22,7 @@ type (
 		EventTypeName() string
 		AggregateID() AggregateID
 		SeqNr() SeqNr
+		WithSeqNr(SeqNr) Event
 		IsCreated() bool
 		Empty() bool
 	}
@@ -50,7 +51,7 @@ func (s SeqNr) Value() uint64 {
 	return s.value
 }
 
-func (s SeqNr) Next() SeqNr {
+func (s SeqNr) next() SeqNr {
 	return SeqNr{value: s.value + 1}
 }
 

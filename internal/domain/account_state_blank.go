@@ -44,7 +44,7 @@ func (ag BlankAccount) WithSnapshotVersion(v uint64) eventstore.Aggregate {
 func (ag BlankAccount) ApplyCommand(command eventstore.Command) (eventstore.Event, error) {
 	switch command.(type) {
 	case CreateAccountCommand:
-		return NewAccountCreatedEvent(ag.id, ag.SeqNr().Next()), nil
+		return NewAccountCreatedEvent(ag.id, ag.SeqNr()), nil
 	default:
 		return nil, errors.New("unknown command type")
 	}

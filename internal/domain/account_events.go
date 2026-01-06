@@ -53,6 +53,11 @@ func (ev AccountCreatedEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
 }
 
+func (ev AccountCreatedEvent) WithSeqNr(seqNr eventstore.SeqNr) eventstore.Event {
+	ev.seqNr = seqNr
+	return ev
+}
+
 func (ev AccountCreatedEvent) IsCreated() bool {
 	return true
 }
@@ -83,6 +88,11 @@ func (ev DepositedEvent) AggregateID() eventstore.AggregateID {
 
 func (ev DepositedEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
+}
+
+func (ev DepositedEvent) WithSeqNr(seqNr eventstore.SeqNr) eventstore.Event {
+	ev.seqNr = seqNr
+	return ev
 }
 
 func (ev DepositedEvent) IsCreated() bool {
@@ -117,6 +127,11 @@ func (ev WithdrawnEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
 }
 
+func (ev WithdrawnEvent) WithSeqNr(seqNr eventstore.SeqNr) eventstore.Event {
+	ev.seqNr = seqNr
+	return ev
+}
+
 func (ev WithdrawnEvent) IsCreated() bool {
 	return false
 }
@@ -146,6 +161,11 @@ func (ev AccountClosedEvent) AggregateID() eventstore.AggregateID {
 
 func (ev AccountClosedEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
+}
+
+func (ev AccountClosedEvent) WithSeqNr(seqNr eventstore.SeqNr) eventstore.Event {
+	ev.seqNr = seqNr
+	return ev
 }
 
 func (ev AccountClosedEvent) IsCreated() bool {

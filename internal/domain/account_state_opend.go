@@ -52,15 +52,15 @@ func (ag OpenedAccount) WithSnapshotVersion(v uint64) eventstore.Aggregate {
 func (ag OpenedAccount) ApplyCommand(command eventstore.Command) (eventstore.Event, error) {
 	switch cmd := command.(type) {
 	case DepositCommand:
-		return NewDepositedEvent(ag.id, ag.seqNr.Next(), cmd.amount), nil
+		return NewDepositedEvent(ag.id, ag.seqNr, cmd.amount), nil
 	case WithdrawCommand:
 		if ag.canWithdraw(cmd.amount) {
-			return NewWithdrawnEvent(ag.id, ag.seqNr.Next(), cmd.amount), nil
+			return NewWithdrawnEvent(ag.id, ag.seqNr, cmd.amount), nil
 		}
 		return nil, fmt.Errorf("insufficient balance %d to be able to withdraw %d", ag.balance, cmd.amount)
 	case CloseAccountCommand:
 		if ag.balance == Zero {
-			return NewAccountClosedEvent(ag.id, ag.seqNr.Next()), nil
+			return NewAccountClosedEvent(ag.id, ag.seqNr), nil
 		}
 		return nil, errors.New("can't close account with non-zero balance")
 	default:

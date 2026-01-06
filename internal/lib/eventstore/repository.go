@@ -49,7 +49,7 @@ func (repo Repository) getOrCreate(result *AggregateResult) (Aggregate, SeqNr) {
 		seqNr = NewSeqNr(0)
 	} else {
 		ag = result.Aggregate
-		seqNr = result.Aggregate.SeqNr().Next()
+		seqNr = result.Aggregate.SeqNr().next()
 	}
 	return ag, seqNr
 }
@@ -72,10 +72,12 @@ func (repo Repository) Save(ctx context.Context, command Command, aggregate Aggr
 	if aggregate == nil || aggregate.Empty() {
 		panic("aggregate is required")
 	}
+	nextSeq := aggregate.SeqNr().next()
 	event, err := aggregate.ApplyCommand(command)
 	if err != nil {
 		return nil, err
 	}
+	event = event.WithSeqNr(nextSeq)
 	err = repo.es.PersistEventAndSnapshot(ctx, event, aggregate)
 	if err != nil {
 		return nil, err
