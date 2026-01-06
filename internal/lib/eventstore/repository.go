@@ -39,17 +39,17 @@ func (repo Repository) FindBy(ctx context.Context, aggregateID AggregateID) (Agg
 	return aggregate, nil
 }
 
-func (repo Repository) getOrCreate(result *AggregateResult) (Aggregate, uint64) {
+func (repo Repository) getOrCreate(result *AggregateResult) (Aggregate, SeqNr) {
 	var (
 		ag    Aggregate
-		seqNr uint64
+		seqNr SeqNr
 	)
 	if result.Empty() {
 		ag = repo.createBlank()
-		seqNr = 0
+		seqNr = NewSeqNr(0)
 	} else {
 		ag = result.Aggregate
-		seqNr = result.Aggregate.SeqNr() + 1
+		seqNr = result.Aggregate.SeqNr().Next()
 	}
 	return ag, seqNr
 }

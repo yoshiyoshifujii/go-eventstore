@@ -8,29 +8,29 @@ import (
 type (
 	AccountCreatedEvent struct {
 		accountID AccountID
-		seqNr     uint64
+		seqNr     eventstore.SeqNr
 	}
 	DepositedEvent struct {
 		accountID AccountID
-		seqNr     uint64
+		seqNr     eventstore.SeqNr
 		amount    uint64
 	}
 	WithdrawnEvent struct {
 		accountID AccountID
-		seqNr     uint64
+		seqNr     eventstore.SeqNr
 		amount    uint64
 	}
 	AccountClosedEvent struct {
 		accountID AccountID
-		seqNr     uint64
+		seqNr     eventstore.SeqNr
 	}
 )
 
 func generateID(ev eventstore.Event) string {
-	return fmt.Sprintf("%s-%d", ev.AggregateID().Value(), ev.SeqNr())
+	return fmt.Sprintf("%s-%d", ev.AggregateID().Value(), ev.SeqNr().Value())
 }
 
-func NewAccountCreatedEvent(accountID AccountID, seqNr uint64) eventstore.Event {
+func NewAccountCreatedEvent(accountID AccountID, seqNr eventstore.SeqNr) eventstore.Event {
 	return AccountCreatedEvent{
 		accountID: accountID,
 		seqNr:     seqNr,
@@ -49,7 +49,7 @@ func (ev AccountCreatedEvent) AggregateID() eventstore.AggregateID {
 	return ev.accountID
 }
 
-func (ev AccountCreatedEvent) SeqNr() uint64 {
+func (ev AccountCreatedEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
 }
 
@@ -61,7 +61,7 @@ func (ev AccountCreatedEvent) Empty() bool {
 	return false
 }
 
-func NewDepositedEvent(accountID AccountID, seqNr uint64, amount uint64) eventstore.Event {
+func NewDepositedEvent(accountID AccountID, seqNr eventstore.SeqNr, amount uint64) eventstore.Event {
 	return DepositedEvent{
 		accountID: accountID,
 		seqNr:     seqNr,
@@ -81,7 +81,7 @@ func (ev DepositedEvent) AggregateID() eventstore.AggregateID {
 	return ev.accountID
 }
 
-func (ev DepositedEvent) SeqNr() uint64 {
+func (ev DepositedEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
 }
 
@@ -93,7 +93,7 @@ func (ev DepositedEvent) Empty() bool {
 	return ev.AggregateID().Empty()
 }
 
-func NewWithdrawnEvent(accountID AccountID, seqNr uint64, amount uint64) WithdrawnEvent {
+func NewWithdrawnEvent(accountID AccountID, seqNr eventstore.SeqNr, amount uint64) WithdrawnEvent {
 	return WithdrawnEvent{
 		accountID: accountID,
 		seqNr:     seqNr,
@@ -113,7 +113,7 @@ func (ev WithdrawnEvent) AggregateID() eventstore.AggregateID {
 	return ev.accountID
 }
 
-func (ev WithdrawnEvent) SeqNr() uint64 {
+func (ev WithdrawnEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
 }
 
@@ -125,7 +125,7 @@ func (ev WithdrawnEvent) Empty() bool {
 	return ev.AggregateID().Empty()
 }
 
-func NewAccountClosedEvent(accountID AccountID, seqNr uint64) AccountClosedEvent {
+func NewAccountClosedEvent(accountID AccountID, seqNr eventstore.SeqNr) AccountClosedEvent {
 	return AccountClosedEvent{
 		accountID: accountID,
 		seqNr:     seqNr,
@@ -144,7 +144,7 @@ func (ev AccountClosedEvent) AggregateID() eventstore.AggregateID {
 	return ev.accountID
 }
 
-func (ev AccountClosedEvent) SeqNr() uint64 {
+func (ev AccountClosedEvent) SeqNr() eventstore.SeqNr {
 	return ev.seqNr
 }
 

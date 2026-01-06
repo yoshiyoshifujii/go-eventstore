@@ -29,7 +29,7 @@ func (store *OnMemoryEventStore) GetLatestSnapshotByID(_ context.Context, aggreg
 	return &result, nil
 }
 
-func (store *OnMemoryEventStore) GetEventsByIDSinceSeqNr(_ context.Context, aggregateID AggregateID, seqNr uint64) ([]Event, error) {
+func (store *OnMemoryEventStore) GetEventsByIDSinceSeqNr(_ context.Context, aggregateID AggregateID, seqNr SeqNr) ([]Event, error) {
 	store.mu.RLock()
 	defer store.mu.RUnlock()
 	key := aggregateID.AsString()
@@ -39,7 +39,7 @@ func (store *OnMemoryEventStore) GetEventsByIDSinceSeqNr(_ context.Context, aggr
 	}
 	var filtered []Event
 	for _, event := range events {
-		if event.SeqNr() >= seqNr {
+		if event.SeqNr().Value() >= seqNr.Value() {
 			filtered = append(filtered, event)
 		}
 	}

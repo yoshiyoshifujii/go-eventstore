@@ -9,12 +9,12 @@ import (
 type (
 	ClosedAccount struct {
 		id              AccountID
-		seqNr           uint64
+		seqNr           eventstore.SeqNr
 		snapshotVersion uint64
 	}
 )
 
-func NewClosedAccount(id AccountID, seqNr, snapshotVersion uint64) ClosedAccount {
+func NewClosedAccount(id AccountID, seqNr eventstore.SeqNr, snapshotVersion uint64) ClosedAccount {
 	return ClosedAccount{
 		id:              id,
 		seqNr:           seqNr,
@@ -30,7 +30,7 @@ func (ag ClosedAccount) AggregateTypeName() string {
 	return "closed_account"
 }
 
-func (ag ClosedAccount) SeqNr() uint64 {
+func (ag ClosedAccount) SeqNr() eventstore.SeqNr {
 	return ag.seqNr
 }
 

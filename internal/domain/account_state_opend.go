@@ -9,13 +9,13 @@ import (
 type (
 	OpenedAccount struct {
 		id              AccountID
-		seqNr           uint64
+		seqNr           eventstore.SeqNr
 		snapshotVersion uint64
 		balance         uint64
 	}
 )
 
-func NewOpenedAccount(id AccountID, seqNr, snapshotVersion, balance uint64) OpenedAccount {
+func NewOpenedAccount(id AccountID, seqNr eventstore.SeqNr, snapshotVersion, balance uint64) OpenedAccount {
 	return OpenedAccount{
 		id:              id,
 		seqNr:           seqNr,
@@ -32,7 +32,7 @@ func (ag OpenedAccount) AggregateTypeName() string {
 	return "opened_account"
 }
 
-func (ag OpenedAccount) SeqNr() uint64 {
+func (ag OpenedAccount) SeqNr() eventstore.SeqNr {
 	return ag.seqNr
 }
 
@@ -52,15 +52,15 @@ func (ag OpenedAccount) WithSnapshotVersion(v uint64) eventstore.Aggregate {
 func (ag OpenedAccount) ApplyCommand(command eventstore.Command) (eventstore.Event, error) {
 	switch cmd := command.(type) {
 	case DepositCommand:
-		return NewDepositedEvent(ag.id, ag.seqNr+1, cmd.amount), nil
+		return NewDepositedEvent(ag.id, ag.seqNr.Next(), cmd.amount), nil
 	case WithdrawCommand:
 		if ag.canWithdraw(cmd.amount) {
-			return NewWithdrawnEvent(ag.id, ag.seqNr+1, cmd.amount), nil
+			return NewWithdrawnEvent(ag.id, ag.seqNr.Next(), cmd.amount), nil
 		}
 		return nil, fmt.Errorf("insufficient balance %d to be able to withdraw %d", ag.balance, cmd.amount)
 	case CloseAccountCommand:
 		if ag.balance == Zero {
-			return NewAccountClosedEvent(ag.id, ag.seqNr+1), nil
+			return NewAccountClosedEvent(ag.id, ag.seqNr.Next()), nil
 		}
 		return nil, errors.New("can't close account with non-zero balance")
 	default:
@@ -73,15 +73,15 @@ func (ag OpenedAccount) ApplyEvent(event eventstore.Event) eventstore.Aggregate 
 	case AccountCreatedEvent:
 		panic("unsupported event")
 	case DepositedEvent:
-		ag.seqNr = ev.seqNr
+		ag.seqNr = ev.SeqNr()
 		ag.balance = ag.balance + ev.amount
 		return ag
 	case WithdrawnEvent:
-		ag.seqNr = ev.seqNr
+		ag.seqNr = ev.SeqNr()
 		ag.balance = ag.balance - ev.amount
 		return ag
 	case AccountClosedEvent:
-		return NewClosedAccount(ev.accountID, ev.seqNr, ag.snapshotVersion)
+		return NewClosedAccount(ev.accountID, ev.SeqNr(), ag.snapshotVersion)
 	default:
 		panic("unknown event")
 	}

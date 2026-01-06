@@ -25,8 +25,8 @@ func (ag BlankAccount) AggregateTypeName() string {
 	return "blank_account"
 }
 
-func (ag BlankAccount) SeqNr() uint64 {
-	return 0
+func (ag BlankAccount) SeqNr() eventstore.SeqNr {
+	return eventstore.NewSeqNr(0)
 }
 
 func (ag BlankAccount) SnapshotVersion() uint64 {
@@ -44,7 +44,7 @@ func (ag BlankAccount) WithSnapshotVersion(v uint64) eventstore.Aggregate {
 func (ag BlankAccount) ApplyCommand(command eventstore.Command) (eventstore.Event, error) {
 	switch command.(type) {
 	case CreateAccountCommand:
-		return NewAccountCreatedEvent(ag.id, ag.SeqNr()+1), nil
+		return NewAccountCreatedEvent(ag.id, ag.SeqNr().Next()), nil
 	default:
 		return nil, errors.New("unknown command type")
 	}

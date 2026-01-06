@@ -1,6 +1,10 @@
 package eventstore
 
 type (
+	SeqNr struct {
+		value uint64
+	}
+
 	AggregateID interface {
 		AggregateIDTypeName() string
 		Value() string
@@ -17,7 +21,7 @@ type (
 		ID() string
 		EventTypeName() string
 		AggregateID() AggregateID
-		SeqNr() uint64
+		SeqNr() SeqNr
 		IsCreated() bool
 		Empty() bool
 	}
@@ -25,7 +29,7 @@ type (
 	Aggregate interface {
 		AggregateID() AggregateID
 		AggregateTypeName() string
-		SeqNr() uint64
+		SeqNr() SeqNr
 		SnapshotVersion() uint64
 		WithSnapshotVersion(uint64) Aggregate
 		ApplyCommand(Command) (Event, error)
@@ -37,6 +41,18 @@ type (
 		Aggregate Aggregate
 	}
 )
+
+func NewSeqNr(value uint64) SeqNr {
+	return SeqNr{value: value}
+}
+
+func (s SeqNr) Value() uint64 {
+	return s.value
+}
+
+func (s SeqNr) Next() SeqNr {
+	return SeqNr{value: s.value + 1}
+}
 
 func (a AggregateResult) Empty() bool {
 	return a.Aggregate == nil

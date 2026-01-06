@@ -5,7 +5,7 @@ import "context"
 type (
 	reader interface {
 		GetLatestSnapshotByID(ctx context.Context, aggregateID AggregateID) (*AggregateResult, error)
-		GetEventsByIDSinceSeqNr(ctx context.Context, aggregateID AggregateID, seqNr uint64) ([]Event, error)
+		GetEventsByIDSinceSeqNr(ctx context.Context, aggregateID AggregateID, seqNr SeqNr) ([]Event, error)
 	}
 
 	writer interface {
