@@ -9,7 +9,6 @@ type (
 	}
 
 	Command interface {
-		AggregateID() AggregateID
 		CommandTypeName() string
 		Empty() bool
 	}
@@ -28,7 +27,7 @@ type (
 		AggregateTypeName() string
 		SeqNr() uint64
 		SnapshotVersion() uint64
-		WithVersion(uint64) Aggregate
+		WithSnapshotVersion(uint64) Aggregate
 		ApplyCommand(Command) (Event, error)
 		ApplyEvent(Event) Aggregate
 		Empty() bool
