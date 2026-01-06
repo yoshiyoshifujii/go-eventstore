@@ -45,7 +45,7 @@ func TestOnMemoryRepository_ReplaysEvents(t *testing.T) {
 	loaded, err := repo.FindBy(ctx, accountID)
 	require.NoError(t, err)
 	require.NotNil(t, loaded)
-	require.Equal(t, "closed_account", (*loaded).AggregateTypeName())
-	require.Equal(t, uint64(4), (*loaded).SeqNr())
-	require.Equal(t, uint64(1), (*loaded).SnapshotVersion())
+	require.Equal(t, "closed_account", loaded.AggregateTypeName())
+	require.Equal(t, uint64(4), loaded.SeqNr())
+	require.Equal(t, uint64(1), loaded.SnapshotVersion())
 }

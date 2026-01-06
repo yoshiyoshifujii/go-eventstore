@@ -16,7 +16,7 @@ func NewRepository(es EventStore, createBlank func() Aggregate) Repository {
 	}
 }
 
-func (repo Repository) FindBy(ctx context.Context, aggregateID AggregateID) (*Aggregate, error) {
+func (repo Repository) FindBy(ctx context.Context, aggregateID AggregateID) (Aggregate, error) {
 	if repo.es == nil {
 		panic("no event store found")
 	}
@@ -36,7 +36,7 @@ func (repo Repository) FindBy(ctx context.Context, aggregateID AggregateID) (*Ag
 	}
 
 	aggregate := repo.eventHandler(ag, events)
-	return &aggregate, nil
+	return aggregate, nil
 }
 
 func (repo Repository) getOrCreate(result *AggregateResult) (Aggregate, uint64) {
