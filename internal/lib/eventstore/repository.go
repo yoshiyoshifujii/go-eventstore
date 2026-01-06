@@ -67,7 +67,7 @@ func (repo Repository) Save(ctx context.Context, command Command, aggregate Aggr
 		panic("no event store found")
 	}
 	if command == nil || command.Empty() {
-		panic("event is required")
+		panic("command is required")
 	}
 	if aggregate == nil || aggregate.Empty() {
 		panic("aggregate is required")
