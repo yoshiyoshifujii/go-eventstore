@@ -8,42 +8,22 @@ import (
 
 type (
 	ClosedAccount struct {
-		id              AccountID
-		seqNr           eventstore.SeqNr
-		snapshotVersion uint64
+		eventstore.BaseAggregate
 	}
 )
 
 func NewClosedAccount(id AccountID, seqNr eventstore.SeqNr, snapshotVersion uint64) ClosedAccount {
 	return ClosedAccount{
-		id:              id,
-		seqNr:           seqNr,
-		snapshotVersion: snapshotVersion,
+		BaseAggregate: eventstore.NewBaseAggregate(id, seqNr, snapshotVersion),
 	}
-}
-
-func (ag ClosedAccount) AggregateID() eventstore.AggregateID {
-	return ag.id
 }
 
 func (ag ClosedAccount) AggregateTypeName() string {
 	return "closed_account"
 }
 
-func (ag ClosedAccount) SeqNr() eventstore.SeqNr {
-	return ag.seqNr
-}
-
-func (ag ClosedAccount) SnapshotVersion() uint64 {
-	return ag.snapshotVersion
-}
-
-func (ag ClosedAccount) WithVersion(v uint64) eventstore.Aggregate {
-	return ag.WithSnapshotVersion(v)
-}
-
 func (ag ClosedAccount) WithSnapshotVersion(v uint64) eventstore.Aggregate {
-	ag.snapshotVersion = v
+	ag.BaseAggregate = ag.BaseAggregate.WithSnapshotVersion(v)
 	return ag
 }
 
