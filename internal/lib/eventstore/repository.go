@@ -16,7 +16,7 @@ func NewRepository(es EventStore, createBlank func() Aggregate) Repository {
 	}
 }
 
-func (repo Repository) FindBy(ctx context.Context, aggregateID AggregateID) (Aggregate, error) {
+func (repo Repository) Load(ctx context.Context, aggregateID AggregateID) (Aggregate, error) {
 	if repo.es == nil {
 		panic("no event store found")
 	}
@@ -62,7 +62,7 @@ func (repo Repository) eventHandler(aggregate Aggregate, events []Event) Aggrega
 	return result
 }
 
-func (repo Repository) Save(ctx context.Context, command Command, aggregate Aggregate) (Aggregate, error) {
+func (repo Repository) Store(ctx context.Context, command Command, aggregate Aggregate) (Aggregate, error) {
 	if repo.es == nil {
 		panic("no event store found")
 	}
